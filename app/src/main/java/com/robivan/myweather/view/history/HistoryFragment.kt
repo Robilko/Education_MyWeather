@@ -11,12 +11,11 @@ import com.robivan.myweather.databinding.FragmentHistoryBinding
 import com.robivan.myweather.utils.showSnackBar
 import com.robivan.myweather.viewmodel.AppState
 import com.robivan.myweather.viewmodel.HistoryViewModel
-import kotlinx.android.synthetic.main.fragment_history.*
 
 class HistoryFragment : Fragment() {
     private var _binding: FragmentHistoryBinding? = null
     private val binding get() = _binding!!
-    private val viewModel: HistoryViewModel by lazy { ViewModelProvider(this).get(HistoryViewModel::class.java) }
+    private val viewModel: HistoryViewModel by lazy { ViewModelProvider(this)[HistoryViewModel::class.java] }
     private val adapter: HistoryAdapter by lazy { HistoryAdapter() }
 
     override fun onCreateView(
@@ -30,29 +29,28 @@ class HistoryFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        history_fragment_recycler_view.adapter = adapter
-        viewModel.historyLiveData.observe(viewLifecycleOwner, { renderData(it) })
+        binding.historyFragmentRecyclerView.adapter = adapter
+        viewModel.historyLiveData.observe(viewLifecycleOwner) { renderData(it) }
         viewModel.getAllHistory()
     }
 
-    private fun renderData(appState: AppState) {
+    private fun renderData(appState: AppState) = with(binding) {
         when (appState) {
             is AppState.Success -> {
-                history_fragment_recycler_view.visibility = View.VISIBLE
-                binding.includedLoadingLayout.loadingLayout.visibility = View.GONE
+                historyFragmentRecyclerView.visibility = View.VISIBLE
+                includedLoadingLayout.loadingLayout.visibility = View.GONE
                 adapter.setData(appState.weatherData)
             }
             is AppState.Loading -> {
-                history_fragment_recycler_view.visibility = View.GONE
-                binding.includedLoadingLayout.loadingLayout.visibility = View.VISIBLE
+                historyFragmentRecyclerView.visibility = View.GONE
+                includedLoadingLayout.loadingLayout.visibility = View.VISIBLE
             }
             is AppState.Error -> {
-                history_fragment_recycler_view.visibility = View.VISIBLE
-                binding.includedLoadingLayout.loadingLayout.visibility = View.GONE
-                history_fragment_recycler_view.showSnackBar(
+                historyFragmentRecyclerView.visibility = View.VISIBLE
+                includedLoadingLayout.loadingLayout.visibility = View.GONE
+                historyFragmentRecyclerView.showSnackBar(
                     getString(R.string.error),
-                    getString(R.string.reload),
-                    { viewModel.getAllHistory() })
+                    getString(R.string.reload), { viewModel.getAllHistory() })
             }
         }
     }

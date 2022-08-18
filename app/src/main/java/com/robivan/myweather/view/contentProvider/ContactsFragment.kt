@@ -15,7 +15,6 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.robivan.myweather.R
 import com.robivan.myweather.databinding.FragmentContactsBinding
-import kotlinx.android.synthetic.main.fragment_contacts.*
 
 const val REQUEST_CODE = 42
 
@@ -39,7 +38,7 @@ class ContactsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         checkPermission()
         adapter = ContactsAdapter(dataContacts)
-        contacts_fragment_recycler_view.adapter = adapter
+        binding.contactsFragmentRecyclerView.adapter = adapter
 
     }
 
