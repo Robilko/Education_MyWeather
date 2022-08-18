@@ -3,11 +3,11 @@ package com.robivan.myweather.view.history
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.robivan.myweather.R
 import com.robivan.myweather.model.Weather
-import kotlinx.android.synthetic.main.fragment_history_recycler_item.view.*
 
 class HistoryAdapter : RecyclerView.Adapter<HistoryAdapter.RecyclerItemViewHolder>() {
 
@@ -39,13 +39,14 @@ class HistoryAdapter : RecyclerView.Adapter<HistoryAdapter.RecyclerItemViewHolde
     inner class RecyclerItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         fun bind(data: Weather) {
             if (layoutPosition != RecyclerView.NO_POSITION) {
-                itemView.history_recycler_view_item_text.text = String.format(
-                    "%s \n%s %s \n%s",
-                    data.city.cityName,
-                    data.temperature.let { if (it > 0) "+$it°" else "$it°" },
-                    data.condition,
-                    data.timestamp
-                )
+                itemView.findViewById<TextView>(R.id.history_recycler_view_item_text).text =
+                    String.format(
+                        "%s \n%s %s \n%s",
+                        data.city.cityName,
+                        data.temperature.let { if (it > 0) "+$it°" else "$it°" },
+                        data.condition,
+                        data.timestamp
+                    )
                 itemView.setOnClickListener {
                     Toast.makeText(
                         itemView.context,
